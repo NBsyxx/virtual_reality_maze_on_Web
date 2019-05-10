@@ -214,28 +214,30 @@
             <!--Environment-->
             <a-entity environment="preset: forest; groundColor: #445; grid: cross"></a-entity>
             <!--Walls-->
-            <a-box id='boundary1' static-body="sphereRadius:NaN" position="15.26534 1.4853 0.29654" height="3" width="4" color="red" material="" geometry="" velocity="" scale="10 4 1" rotation="0 90 0"></a-box>
-            <a-box id='boundary2' static-body="sphereRadius:NaN" position="-15.26534 1.4853 0.29654" height="3" width="4" color="red" material="" geometry="" velocity="" scale="10 4 1" rotation="0 90 0"></a-box>
-            <a-box id='boundary3' static-body="sphereRadius:NaN" position="0 1 15" height="3" width="4" color="red" material="" geometry="" velocity="" scale="10 4 1" rotation="0 180 0"></a-box>
-            <a-box id='boundary4' static-body="sphereRadius:NaN" position="0 1 -15" height="3" width="4" color="red" material="" geometry="" velocity="" scale="10 4 1" rotation="0 180 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.91325 0 8.82805" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="4 4 1" rotation="0 180 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="8.78026 1 -0.69117" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="5 4 1" rotation="0 90 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-6.5039 1 1.3252" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="4 4 1" rotation="0 90 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.84142 1 -4.00376" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="3 4 1" rotation="0 90 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-11.80579 1.34737 -4.95386" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="3 4 3" rotation="0 180 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-4.66457 1 -9.98083" height="3" width="4" color="blue" material="" geometry="" velocity="" scale="3 4 1" rotation="0 180 0"></a-box>
+            <a-box id='boundary1' static-body="sphereRadius:NaN" position="15.26534 1.4853 0.29654" height="3" src='img/wall.png' width="4" material="" geometry="" velocity="" scale="10 9 1" rotation="0 90 0"></a-box>
+            <a-box id='boundary2' static-body="sphereRadius:NaN" position="-15.26534 1.4853 0.29654" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 90 0"></a-box>
+            <a-box id='boundary3' static-body="sphereRadius:NaN" position="0 1 15" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 180 0"></a-box>
+            <a-box id='boundary4' static-body="sphereRadius:NaN" position="0 1 -15" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 180 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.91325 0 8.82805" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="4 9 1" rotation="0 180 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="8.78026 1 -0.69117" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="5 9 1" rotation="0 90 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-6.5039 1 1.3252" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="4 9 1" rotation="0 90 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.84142 1 -4.00376" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 9 1" rotation="0 90 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-11.80579 1.34737 -4.95386" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 4 3" rotation="0 180 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="-4.66457 1 -9.98083" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 9 1" rotation="0 180 0"></a-box>
 
             <!--Floors-->
-            <a-plane static-body position="0 0.3 0" rotation="-90 0 0" width="8" height="14" color='#778899' scale="100 100 100"></a-plane>
-            <a-plane id="stair" static-body="sphereRadius:NaN" position="-11.06786 3.46864 3.50102" rotation="-61.5 0 0" width="8" height="14" color="#7BC8A4" scale="1 1.15 2" material="" geometry="" velocity=""></a-plane>
-            <a-plane id='secondLevel' static-body="sphereRadius:NaN" position="-30.91689 5.05353 0" rotation="-90 0 0" width="8" height="14" color="yellow" scale="4 4 2" material="" geometry="" velocity=""></a-plane>
+            <a-plane static-body position="0 0.3 0" rotation="-90 0 0" width="8" height="14" color='#553F23' scale="100 100 100"></a-plane>
+            <a-plane id="stair" static-body="sphereRadius:NaN" position="-11.06786 3.46864 3.50102" rotation="-61.5 0 0" width="8" height="14" color='#553F23' scale="1 1.15 2" material="" geometry="" velocity=""></a-plane>
+            <a-entity static-body geometry="" scale="20 0.5 40" src='img/wall.png'></a-entity>
+            <a-box id="boundary1" static-body="sphereRadius:NaN" position="2.92264 5 0.0594" height="3" src="img/wall.png" width="4" material="" geometry="" velocity="" scale="8 0.5 24" rotation="0 90 0"></a-box>
+            <a-box id="stair2" static-body="sphereRadius:NaN" position="-7.04728 9.99887 11.97242" height="3" width="4" src="img/wall.png" material="" geometry="" velocity="" scale="1.3 6 1" rotation="-59.99999999999999 90 0"></a-box>
 
             <!--Congrats-->
-            <a-entity text="value:Congratulation!!;color:#ff80ff" scale="80 80 80" position='-33 12 -34' rotation="0 90 0"></a-entity>
+            <a-entity static-body="sphereRadius:NaN" text="value:Congratulation!!;color:#ff80ff" scale="80 80 80" position="-57.61029 17.22401 -13.10115" rotation="0 90 0" velocity=""></a-entity>
             <a-sky color="#ECECEC"></a-sky>
 
             <!--water-->
-            <a-ocean width="10" depth="10" density="50" opacity="1" position="0 0.7 0" ocean="depth:50;opacity:0.6" scale="3.1 0.6 1"></a-ocean>
+            <a-ocean width="10" depth="10" density="50" color='#553F23' opacity="0.2" position="0 0.7 0" ocean="depth:50;opacity:0.8" scale="3.1 0.6 1"></a-ocean>
 
 
 
