@@ -31,10 +31,6 @@
                 },
             },
 
-            /*******************************************************************
-             * Lifecycle
-             */
-
             init: function() {
                 this.system = this.el.sceneEl.systems.physics;
                 this.system.addComponent(this);
@@ -69,21 +65,6 @@
                 this.system.removeComponent(this);
                 delete this.el.body;
             },
-
-            /*******************************************************************
-             * Update
-             */
-
-            /**
-             * Checks CANNON.World for collisions and attempts to apply them to the
-             * element automatically, in a player-friendly way.
-             *
-             * There's extra logic for horizontal surfaces here. The basic requirements:
-             * (1) Only apply gravity when not in contact with _any_ horizontal surface.
-             * (2) When moving, project the velocity against exactly one ground surface.
-             *     If in contact with two ground surfaces (e.g. ground + ramp), choose
-             *     the one that collides with current velocity, if any.
-             */
             beforeStep: function(t, dt) {
                 if (!dt) return;
 
@@ -118,9 +99,6 @@
                     body.velocity.copy(velocity);
 
                     for (var i = 0, contact; contact = contacts[i]; i++) {
-                        // 1. Find any collisions involving this element. Get the contact
-                        // normal, and make sure it's oriented _out_ of the other object and
-                        // enabled (body.collisionReponse is true for both bodies)
                         if (!contact.enabled) {
                             continue;
                         }
@@ -134,14 +112,8 @@
 
                         didCollide = body.velocity.dot(currentSurfaceNormal) < -EPS;
                         if (didCollide && currentSurfaceNormal.y <= 0.5) {
-                            // 2. If current trajectory attempts to move _through_ another
-                            // object, project the velocity against the collision plane to
-                            // prevent passing through.
                             velocity.projectOnPlane(currentSurfaceNormal);
                         } else if (currentSurfaceNormal.y > 0.5) {
-                            // 3. If in contact with something roughly horizontal (+/- 45º) then
-                            // consider that the current ground. Only the highest qualifying
-                            // ground is retained.
                             height = body.id === contact.bi.id ?
                                 Math.abs(contact.rj.y + contact.bj.position.y) :
                                 Math.abs(contact.ri.y + contact.bi.position.y);
@@ -160,15 +132,9 @@
                         } else if (groundNormal.y < 1 - EPS) {
                             groundNormal.copy(this.raycastToGround(groundBody, groundNormal));
                         }
-
-                        // 4. Project trajectory onto the top-most ground object, unless
-                        // trajectory is > 45º.
                         velocity.projectOnPlane(groundNormal);
 
                     } else if (this.system.driver.world) {
-                        // 5. If not in contact with anything horizontal, apply world gravity.
-                        // TODO - Why is the 4x scalar necessary.
-                        // NOTE: Does not work if physics runs on a worker.
                         velocity.add(this.system.driver.world.gravity.scale(dt * 4.0 / 1000));
                     }
 
@@ -177,16 +143,6 @@
                     this.el.setAttribute('position', body.position);
                 };
             }()),
-
-            /**
-             * When walking on complex surfaces (trimeshes, borders between two shapes),
-             * the collision normals returned for the player sphere can be very
-             * inconsistent. To address this, raycast straight down, find the collision
-             * normal, and return whichever normal is more vertical.
-             * @param  {CANNON.Body} groundBody
-             * @param  {CANNON.Vec3} groundNormal
-             * @return {CANNON.Vec3}
-             */
             raycastToGround: function(groundBody, groundNormal) {
                 let ray,
                     hitNormal,
@@ -194,12 +150,10 @@
                     vTo = this.body.position.clone();
 
                 ray = new CANNON.Ray(vFrom, vTo);
-                ray._updateDirection(); // TODO - Report bug.
+                ray._updateDirection();
                 ray.intersectBody(groundBody);
 
                 if (!ray.hasHit) return groundNormal;
-
-                // Compare ABS, in case we're projecting against the inside of the face.
                 hitNormal = ray.result.hitNormalWorld;
                 return Math.abs(hitNormal.y) > Math.abs(groundNormal.y) ? hitNormal : groundNormal;
             }
@@ -207,6 +161,10 @@
     </script>
 
     <body>
+        <audio volume='0.2' id='bgm' autoplay loop>
+            <source src="music/Gunrun.mp3" type="audio/mpeg">
+            your browser does not support bgm
+        </audio>
         <a-scene physics="debug: true">
             <a-assets>
                 <img id="water" src="water.png">
@@ -214,33 +172,34 @@
             <!--Environment-->
             <a-entity environment="preset: egypt; groundColor: #445; grid: cross"></a-entity>
             <!--Walls-->
-            <a-box id='boundary1' static-body="sphereRadius:NaN" position="15.26534 1.4853 0.29654" height="3" src='img/floor.png' width="4" material="" geometry="" velocity="" scale="10 9 1" rotation="0 90 0"></a-box>
-            <a-box id='boundary2' static-body="sphereRadius:NaN" position="-15.26534 1.4853 0.29654" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 90 0"></a-box>
-            <a-box id='boundary3' static-body="sphereRadius:NaN" position="0 1 15" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 180 0"></a-box>
-            <a-box id='boundary4' static-body="sphereRadius:NaN" position="0 1 -15" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="10 9 1" rotation="0 180 0"></a-box>
+            <a-box id='boundary1' static-body="sphereRadius:NaN" position="15.26534 1.4853 0.29654" height="3" src='img/floor.png' width="4" material="" geometry="" velocity="" scale='8 9 1' rotation="0 90 0"></a-box>
+            <a-box id='boundary2' static-body="sphereRadius:NaN" position="-15.26534 1.4853 0.29654" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="8 9 1" rotation="0 90 0"></a-box>
+            <a-box id='boundary3' static-body="sphereRadius:NaN" position="0 1 15" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="8 9 1" rotation="0 180 0"></a-box>
+            <a-box id='boundary4' static-body="sphereRadius:NaN" position="0 1 -15" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="8 9 1" rotation="0 180 0"></a-box>
             <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.91325 0 8.82805" height="3" width="4" src='img/internal.png' material="" geometry="" velocity="" scale="4 9 1" rotation="0 180 0"></a-box>
             <a-box id="internalWall" static-body="sphereRadius:NaN" position="8.78026 1 -0.69117" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="5 9 1" rotation="0 90 0"></a-box>
             <a-box id="internalWall" static-body="sphereRadius:NaN" position="-6.5039 1 1.3252" height="3" width="4" src='img/internal.png' material="" geometry="" velocity="" scale="4 9 1" rotation="0 90 0"></a-box>
-            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.84142 1 -4.00376" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 9 1" rotation="0 90 0"></a-box>
+            <a-box id="internalWall" static-body="sphereRadius:NaN" position="0.84142 1 -4.00376" height="3" width="4" src='img/floor.png' material="" geometry="" velocity="" scale="3 9 3" rotation="0 90 0"></a-box>
             <a-box id="internalWall" static-body="sphereRadius:NaN" position="-11.80579 1.34737 -4.95386" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 4 3" rotation="0 180 0"></a-box>
             <a-box id="internalWall" static-body="sphereRadius:NaN" position="-4.66457 1 -9.98083" height="3" width="4" src='img/wall.png' material="" geometry="" velocity="" scale="3 9 1" rotation="0 180 0"></a-box>
 
             <!--Floors-->
-            <a-plane static-body position="0 0.2 0" rotation="-90 0 0" width="8" height="14" color='#553F23' scale="100 100 100"></a-plane>
-            <a-plane id="stair" static-body="sphereRadius:NaN" position="-11.06786 3.46864 3.50102" rotation="-61.5 0 0" width="8" height="14" color='#553F23' scale="1 1.15 2" material="" geometry="" velocity=""></a-plane>
+            <a-plane static-body position="0 0.2 0" rotation="-90 0 0" width="8" height="14" src="img/floor.png" scale="100 100 100"></a-plane>
+            <a-plane id="stair" static-body="sphereRadius:NaN" position="-11.06786 3.46864 3.50102" rotation="-61.5 0 0" width="8" height="14" src='img/floor.png' scale="1 1.15 2" material="" geometry="" velocity=""></a-plane>
 
             <a-box id="secondFloor" static-body="sphereRadius:NaN" position="2.92264 5 0.0594" height="3" src="img/floor.png" width="4" material="" geometry="" velocity="" scale="7.5 0.5 24" rotation="0 90 0"></a-box>
             <a-box id="stair2" static-body="sphereRadius:NaN" position="-7.04728 9.99887 11.97242" height="3" width="4" src="img/floor.png" material="" geometry="" velocity="" scale="1.3 6 1" rotation="-59.99999999999999 90 0"></a-box>
 
             <!--Congrats-->
-            <a-entity static-body="sphereRadius:NaN" text="value:Congratulation!!;color:#ff80ff" scale="200 200 200" position="-57.61029 17.22401 -13.10115" rotation="0 90 0" velocity=""></a-entity>
+            <a-entity static-body="sphereRadius:NaN" text="value:Congratulations!!;color:#a85760" scale="200 200 200" position="-128.61029 17.22401 -48.10115" rotation="0 90 0" velocity=""></a-entity>
+            <a-entity static-body="sphereRadius:NaN" text="value:PLEASE, GET OUT OF HERE!;color:white" scale="5 5 5" position='1.9 2.0 2.1' rotation="0 0 0" velocity=""></a-entity>
             <a-sky color="#ECECEC"></a-sky>
 
             <!--water-->
-            <a-ocean width="10" depth="10" density="50" color='blue' opacity="0.2" position="0 0.7 0" ocean="depth:50;opacity:0.3" scale="3.1 0.6 1"></a-ocean>
+            <a-ocean width="10" depth="10" density="50" color='#87CEEB' opacity="0.2" position="0 0.8 0" ocean="depth:50;opacity:0.45" scale="3.1 0.6 1"></a-ocean>
 
             <!--ceiling-->
-            <a-box id="roof" static-body="sphereRadius:NaN" position="2.92264 15 0.0594" height="3" src="img/floor.png" width="4" material="" geometry="" velocity="" scale="7.5 0.5 24" rotation="0 90 0"></a-box>
+            <a-box id="roof" static-body="sphereRadius:NaN" position="2.92264 15 0.0594" height="3" src="img/floor.png" width="4" material="" geometry="" velocity="" scale="7.8 0.5 24" rotation="0 90 0"></a-box>
 
             <a-entity kinema-body="radius: 0.8" movement-controls="fly: false" position="0 0 4" look-controls>
                 <a-entity camera position="0 1.5 0"></a-entity>
