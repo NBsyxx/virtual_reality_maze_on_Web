@@ -5,5 +5,7 @@
 2. Use WASD to move 
 3. Goal: to get out of the maze. 
 
+url:http://songyunxiao.live/maze
+
 
 This program is free software and is distributed under an [MIT License](LICENSE).
